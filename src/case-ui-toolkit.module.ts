@@ -1,6 +1,7 @@
 import { PortalModule } from '@angular/cdk/portal';
-import { NgModule } from '@angular/core';
+import { Injector, ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { PaginatePipe } from 'ngx-pagination';
+import { AbstractAppConfig } from './app.config';
 import { AlertComponent } from './components/banners/alert/alert.component';
 import { BannersModule } from './components/banners/banners.module';
 import { BodyComponent } from './components/body/body.component';
@@ -66,6 +67,10 @@ import { RemoveDialogComponent } from './shared/components/dialogs/remove-dialog
 import { SaveOrDiscardDialogComponent } from './shared/components/dialogs/save-or-discard-dialog/save-or-discard-dialog.component';
 import { CallbackErrorsComponent } from './shared/components/error/callback-errors.component';
 import { PaletteModule } from './shared/components/palette/palette.module';
+
+export function resolver<T>(type: Type<T>, injector: Injector): T {
+  return injector.get(type);
+}
 
 @NgModule({
     imports: [
@@ -144,4 +149,13 @@ import { PaletteModule } from './shared/components/palette/palette.module';
       PaginatePipe
     ]
 })
-export class CaseUIToolkitModule {}
+export class CaseUIToolkitModule {
+  public static forRoot(config: Type<AbstractAppConfig>): ModuleWithProviders {
+    return {
+      ngModule: CaseUIToolkitModule,
+      providers: [
+        { provide: AbstractAppConfig, useFactory: resolver, deps: [config, Injector] }
+      ]
+    };
+  }
+}
