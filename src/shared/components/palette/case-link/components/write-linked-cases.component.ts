@@ -41,6 +41,7 @@ export class WriteLinkedCasesComponent extends AbstractFieldWriteComponent imple
     // Initialise the first page to display
     this.linkedCasesPage = this.linkedCasesPages.BEFORE_YOU_START;
     this.linkedCasesService.caseId = this.caseEditPageComponent.getCaseId();
+    this.caseEditPageComponent.shouldValidateCaseLink = true;
   }
 
   public onLinkedCasesStateEmitted(linkedCasesState: LinkedCasesState): void {
@@ -58,6 +59,7 @@ export class WriteLinkedCasesComponent extends AbstractFieldWriteComponent imple
 
   public proceedToNextState(): void {
     if (this.isAtFinalState()) {
+      this.caseEditPageComponent.shouldValidateCaseLink = false;
       // Trigger validation to clear the "notAtFinalState" error if now at the final state
       this.formGroup.updateValueAndValidity();
     }

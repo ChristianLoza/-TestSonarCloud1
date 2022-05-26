@@ -52,6 +52,7 @@ export class CaseEditPageComponent implements OnInit, AfterViewChecked {
   caseFields: CaseField[];
   validationErrors: { id: string, message: string }[] = [];
   showSpinner: boolean;
+  shouldValidateCaseLink: boolean;
 
   hasPreviousPage$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -168,7 +169,7 @@ export class CaseEditPageComponent implements OnInit, AfterViewChecked {
             if (casefield.isComplex()) {
               this.generateErrorMessage(casefield.field_type.complex_fields, fieldElement, id);
             } else if (casefield.isCollection() && casefield.field_type.collection_field_type.type === 'Complex') {
-              if (FieldsUtils.isLinkedCasesCaseField(casefield)) {
+              if (this.shouldValidateCaseLink && FieldsUtils.isLinkedCasesCaseField(casefield)) {
                 this.validationErrors.push({ id, message: 'Please select Next to go to the next page' });
               } else {
                 const fieldArray = fieldElement as FormArray;
